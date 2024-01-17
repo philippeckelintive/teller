@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	cloud.google.com/go v0.78.0
-	github.com/1Password/connect-sdk-go v1.2.0
+	github.com/1Password/connect-sdk-go v1.5.3
 	github.com/AlecAivazis/survey/v2 v2.2.8
 	github.com/Azure/azure-sdk-for-go v52.5.0+incompatible
 	github.com/Azure/go-autorest/autorest v0.11.18
@@ -33,7 +33,8 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/samber/lo v1.11.0
 	github.com/sirupsen/logrus v1.7.0
-	github.com/stretchr/testify v1.8.1
+	github.com/sosedoff/ansible-vault-go v0.2.0
+	github.com/stretchr/testify v1.8.2
 	github.com/testcontainers/testcontainers-go v0.10.1-0.20210331130832-54854fb15ccb
 	github.com/tobischo/gokeepasslib/v3 v3.2.5
 	go.etcd.io/etcd/api/v3 v3.5.0-alpha.0
@@ -103,7 +104,7 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/go-github v17.0.0+incompatible // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/google/uuid v1.2.0 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
 	github.com/hashicorp/go-hclog v0.12.0 // indirect
@@ -140,12 +141,11 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
-	github.com/sosedoff/ansible-vault-go v0.2.0 // indirect
 	github.com/spf13/cobra v0.0.5 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/twpayne/go-pinentry v0.2.0 // indirect
-	github.com/uber/jaeger-client-go v2.25.0+incompatible // indirect
-	github.com/uber/jaeger-lib v2.4.0+incompatible // indirect
+	github.com/uber/jaeger-client-go v2.30.0+incompatible // indirect
+	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/urfave/cli/v2 v2.24.3 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	github.com/zalando/go-keyring v0.2.2 // indirect
@@ -160,7 +160,6 @@ require (
 	golang.org/x/term v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
-	golang.org/x/tools v0.6.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/grpc v1.35.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
