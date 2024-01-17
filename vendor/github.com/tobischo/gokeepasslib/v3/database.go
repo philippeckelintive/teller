@@ -1,7 +1,13 @@
 package gokeepasslib
 
 import (
+	"errors"
 	"fmt"
+)
+
+// ErrInvalidDatabaseOrCredentials is returned when the file cannot be read properly.
+var ErrInvalidDatabaseOrCredentials = errors.New(
+	"Cannot read database: Either credentials are invalid or the database file is corrupted",
 )
 
 // Database stores all contents necessary for a keepass database file
@@ -95,12 +101,23 @@ func (db *Database) GetEncrypterManager(transformedKey []byte) (*EncrypterManage
 // GetStreamManager returns a StreamManager based on the db headers, or nil if the type is unsupported
 // Can be used to lock only certain entries instead of calling
 func (db *Database) GetStreamManager() (*StreamManager, error) {
-	if db.Header.FileHeaders != nil {
+	if db.Header != nil && db.Header.Signature != nil {
 		if db.Header.IsKdbx4() {
+			if db.Content == nil ||
+				db.Content.InnerHeader == nil ||
+				db.Content.InnerHeader.InnerRandomStreamKey == nil {
+				return nil, ErrInvalidDatabaseOrCredentials
+			}
+
 			return NewStreamManager(
 				db.Content.InnerHeader.InnerRandomStreamID,
 				db.Content.InnerHeader.InnerRandomStreamKey,
 			)
+		}
+
+		if db.Header.FileHeaders != nil &&
+			db.Header.FileHeaders.ProtectedStreamKey == nil {
+			return nil, ErrInvalidDatabaseOrCredentials
 		}
 
 		return NewStreamManager(
@@ -140,6 +157,20 @@ func (db *Database) LockProtectedEntries() error {
 	return nil
 }
 
+// AddBinary adds a binary to the database.
+// It takes care of adding it to the correct place based on the format version
+func (db *Database) AddBinary(binaryContent []byte) *Binary {
+	if db.Header.IsKdbx4() {
+		return db.getBinaries().Add(binaryContent, WithKDBXv4Binary)
+	}
+	return db.getBinaries().Add(binaryContent, WithKDBXv31Binary)
+}
+
+// FindBinary returns the binary with the given id if one could be found. It returns nil otherwise
+func (db *Database) FindBinary(id int) *Binary {
+	return db.getBinaries().Find(id)
+}
+
 // ErrRequiredAttributeMissing is returned if a required value is not given
 type ErrRequiredAttributeMissing string
 
@@ -148,4 +179,59 @@ func (e ErrRequiredAttributeMissing) Error() string {
 		"gokeepasslib: operation can not be performed if database does not have %s",
 		string(e),
 	)
+}
+
+type binariesUsages map[int][]*BinaryReference
+
+func (db *Database) getBinaries() *Binaries {
+	if db.Header.IsKdbx4() {
+		return &db.Content.InnerHeader.Binaries
+	}
+
+	return &db.Content.Meta.Binaries
+}
+
+func (db *Database) cleanupBinaries() {
+	usages := db.getBinariesUsages()
+	updated := Binaries{}
+	counter := 0
+
+	for _, binary := range *db.getBinaries() {
+		if refs, ok := usages[binary.ID]; ok {
+			for _, ref := range refs {
+				ref.Value.ID = counter
+			}
+			binary.ID = counter
+			updated = append(updated, binary)
+			counter++
+		}
+	}
+
+	*db.getBinaries() = updated
+}
+
+func addEntriesBinaries(result binariesUsages, entries []Entry) {
+	for _, entry := range entries {
+		for i, binary := range entry.Binaries {
+			id := binary.Value.ID
+			result[id] = append(result[id], &entry.Binaries[i])
+		}
+		for _, history := range entry.Histories {
+			addEntriesBinaries(result, history.Entries)
+		}
+	}
+}
+
+func addGroupBinaries(result binariesUsages, parent *Group) {
+	addEntriesBinaries(result, parent.Entries)
+	for _, group := range parent.Groups {
+		addGroupBinaries(result, &group)
+	}
+}
+
+func (db *Database) getBinariesUsages() binariesUsages {
+	result := binariesUsages{}
+
+	addGroupBinaries(result, &db.Content.Root.Groups[0])
+	return result
 }

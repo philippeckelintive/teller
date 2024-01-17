@@ -1,3 +1,25 @@
+### v3.5.1
+
+* Update `golang.org/x/crypto` to `v0.8.0`
+* Update `golang.org/x/sys` to `v0.7.0`
+
+### v3.5.0
+
+* Add support for Cloning `Group` and `Entry`
+
+### v3.4.1
+
+* Fix key file support to actually deal with the different supported key file types
+
+### v3.4.0
+
+* Fix binary referencing after remove
+* Add binary garbage collections if all references have been removed
+
+### v3.3.0
+
+* Add database `AddBinary` and `FindBinary` functions
+
 ### v3.2.5
 
 * Add missing CustomData support for entries
