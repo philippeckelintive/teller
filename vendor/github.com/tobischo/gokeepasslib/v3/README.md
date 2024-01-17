@@ -1,6 +1,8 @@
 gokeepasslib
 ============
 
+![GitHub](https://img.shields.io/github/license/tobischo/gokeepasslib) ![Build Status](https://github.com/tobischo/gokeepasslib/actions/workflows/test.yml/badge.svg)  ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/tobischo/gokeepasslib/master) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/tobischo/gokeepasslib)
+
 gokeepasslib is a library which allows reading Keepass 2 files (kdbx).
 
 Note: only Keepass v2.30 or higher is properly supported since earlier versions do not allow empty XML tags but expected self-closing tags (which is valid XML but not really supported by Golang on XML marshaling)
@@ -58,11 +60,11 @@ In kdbx files, which are encrypted using the file credentials, fields are protec
 
 ### Example: writing a file
 
-See [examples/writing/example-writing.go](examples/example-writing.go)
+See [examples/writing/example-writing.go](examples/writing/example-writing.go)
 
 ### Example: deleting a file
 
-See [examples/deleting/example-deleting.go](examples/example-deleting.go)
+See [examples/deleting/example-deleting.go](examples/deleting/example-deleting.go)
 
 ### TODO
 
@@ -79,4 +81,4 @@ See [examples/deleting/example-deleting.go](examples/example-deleting.go)
 [LICENSE](LICENSE.md)
 
 ### Copyright
-Copyright &copy; 2022 Tobias Schoknecht. All rights reserved.
+Copyright &copy; 2023 Tobias Schoknecht. All rights reserved.
